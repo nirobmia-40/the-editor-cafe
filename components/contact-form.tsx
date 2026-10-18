@@ -18,10 +18,7 @@ export default function ContactForm() {
     const email = String(data.get("email") ?? "").trim();
     const message = String(data.get("message") ?? "").trim();
     const subject = encodeURIComponent("Website inquiry from " + name);
-    const body = encodeURIComponent("Name: " + name + "
-Email: " + email + "
-
-" + message);
+    const body = encodeURIComponent(["Name: " + name, "Email: " + email, "", message].join(String.fromCharCode(10)));
     const draft = "https://mail.google.com/mail/?view=cm&fs=1&to=nirobmia2026%40gmail.com&su=" + subject + "&body=" + body;
 
     try {
@@ -30,13 +27,11 @@ Email: " + email + "
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, message }),
       });
-
       if (!response.ok) {
         setEmailDraft(draft);
         setStatus("fallback");
         return;
       }
-
       form.reset();
       setStatus("sent");
     } catch {
